@@ -21,7 +21,10 @@ class ClaudeAnalyst:
 
     def __init__(self):
         if not ANTHROPIC_API_KEY:
-            raise ValueError("ANTHROPIC_API_KEY not set in .env")
+            raise ValueError(
+                "Anthropic API key not set. Add ANTHROPIC_API_KEY to your "
+                ".env file (local) or Streamlit Secrets (cloud)."
+            )
         self.client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
         self.model = CLAUDE_MODEL
 
