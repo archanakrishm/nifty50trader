@@ -1,0 +1,10 @@
+.env
+*.pkl
+__pycache__/
+*.pyc
+.DS_Store
+nifty50_trader.log
+venv/
+.streamlit/
+*.log
+nohup.out
