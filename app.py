@@ -886,3 +886,14 @@ elif page == "⚙️ Settings":
         4. Restart the app
         """)
 
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#  FOOTER
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+st.markdown("---")
+st.markdown(
+    "<div style='text-align: center; color: grey; font-size: 0.85em;'>"
+    "Built by <strong>Archana Krishnamoorthy</strong>"
+    "</div>",
+    unsafe_allow_html=True,
+)
+
