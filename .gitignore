@@ -5,6 +5,6 @@ __pycache__/
 .DS_Store
 nifty50_trader.log
 venv/
-.streamlit/
+.streamlit/secrets.toml
 *.log
 nohup.out
