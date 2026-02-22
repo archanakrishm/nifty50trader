@@ -16,16 +16,34 @@ from config import ANTHROPIC_API_KEY, CLAUDE_MODEL
 logger = logging.getLogger(__name__)
 
 
+def _resolve_api_key() -> str:
+    """Get Anthropic API key from config, env, or st.secrets."""
+    if ANTHROPIC_API_KEY:
+        return ANTHROPIC_API_KEY
+    import os
+    val = os.getenv("ANTHROPIC_API_KEY", "")
+    if val:
+        return val
+    try:
+        import streamlit as st
+        if hasattr(st, "secrets") and "ANTHROPIC_API_KEY" in st.secrets:
+            return st.secrets["ANTHROPIC_API_KEY"]
+    except Exception:
+        pass
+    return ""
+
+
 class ClaudeAnalyst:
     """Claude-powered market intelligence for Nifty 50 analysis."""
 
     def __init__(self):
-        if not ANTHROPIC_API_KEY:
+        api_key = _resolve_api_key()
+        if not api_key:
             raise ValueError(
-                "Anthropic API key not set. Add ANTHROPIC_API_KEY to your "
-                ".env file (local) or Streamlit Secrets (cloud)."
+                "Anthropic API key not set. Add ANTHROPIC_API_KEY to "
+                "Streamlit Secrets (cloud) or .env file (local)."
             )
-        self.client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+        self.client = anthropic.Anthropic(api_key=api_key)
         self.model = CLAUDE_MODEL
 
     def _call(self, system: str, prompt: str, max_tokens: int = 4096) -> str:

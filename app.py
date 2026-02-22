@@ -56,11 +56,12 @@ def get_db():
 def get_ml():
     return MLPredictor()
 
-@st.cache_resource
 def get_claude():
+    """Create ClaudeAnalyst (no cache — retries if secrets become available)."""
     try:
         return ClaudeAnalyst()
-    except Exception:
+    except Exception as e:
+        logger.warning(f"Claude init failed: {e}")
         return None
 
 @st.cache_data(ttl=60)
@@ -410,7 +411,10 @@ elif page == "🧠 Claude AI Analyst":
 
     claude = get_claude()
     if claude is None:
-        st.error("Anthropic API key not set. Add ANTHROPIC_API_KEY to your .env file.")
+        st.error(
+            "Anthropic API key not set. Add ANTHROPIC_API_KEY to "
+            "**Streamlit Secrets** (Settings → Secrets) or your local .env file."
+        )
     else:
         st.success("Claude connected ✅")
 
