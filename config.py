@@ -6,6 +6,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# ─── Helper: read from env or Streamlit secrets ──────────────────────────────
+def _get_secret(key: str, default: str = "") -> str:
+    """Try os.getenv first, then fall back to st.secrets (Streamlit Cloud)."""
+    val = os.getenv(key, "")
+    if val:
+        return val
+    try:
+        import streamlit as st
+        return st.secrets.get(key, default)
+    except Exception:
+        return default
+
 # ─── Market Settings ─────────────────────────────────────────────────────────
 NIFTY50_SYMBOL = "^NSEI"
 NIFTY50_NSE_SYMBOL = "NIFTY 50"
@@ -60,28 +72,28 @@ TAKE_PROFIT_PCT = 0.06          # 6% take profit (2:1 R:R)
 TRAILING_STOP_PCT = 0.02        # 2% trailing stop
 
 # ─── Broker Settings (Zerodha) ───────────────────────────────────────────────
-ZERODHA_API_KEY = os.getenv("ZERODHA_API_KEY", "")
-ZERODHA_API_SECRET = os.getenv("ZERODHA_API_SECRET", "")
-ZERODHA_ACCESS_TOKEN = os.getenv("ZERODHA_ACCESS_TOKEN", "")
-ZERODHA_USER_ID = os.getenv("ZERODHA_USER_ID", "")
+ZERODHA_API_KEY = _get_secret("ZERODHA_API_KEY")
+ZERODHA_API_SECRET = _get_secret("ZERODHA_API_SECRET")
+ZERODHA_ACCESS_TOKEN = _get_secret("ZERODHA_ACCESS_TOKEN")
+ZERODHA_USER_ID = _get_secret("ZERODHA_USER_ID")
 
 # ─── Broker Settings (Angel One / Groww) ──────────────────────────────────────
-ANGEL_API_KEY = os.getenv("ANGEL_API_KEY", "")
-ANGEL_CLIENT_ID = os.getenv("ANGEL_CLIENT_ID", "")
-ANGEL_PASSWORD = os.getenv("ANGEL_PASSWORD", "")
-ANGEL_TOTP_SECRET = os.getenv("ANGEL_TOTP_SECRET", "")
+ANGEL_API_KEY = _get_secret("ANGEL_API_KEY")
+ANGEL_CLIENT_ID = _get_secret("ANGEL_CLIENT_ID")
+ANGEL_PASSWORD = _get_secret("ANGEL_PASSWORD")
+ANGEL_TOTP_SECRET = _get_secret("ANGEL_TOTP_SECRET")
 
 # ─── Groww Settings ──────────────────────────────────────────────────────────
-GROWW_APP_ID = os.getenv("GROWW_APP_ID", "")
-GROWW_APP_SECRET = os.getenv("GROWW_APP_SECRET", "")
+GROWW_APP_ID = _get_secret("GROWW_APP_ID")
+GROWW_APP_SECRET = _get_secret("GROWW_APP_SECRET")
 
 # ─── Supabase Settings ───────────────────────────────────────────────────────
-SUPABASE_URL = os.getenv("SUPABASE_URL", "")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY", "")           # anon/public key
-SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY", "")  # service role key
+SUPABASE_URL = _get_secret("SUPABASE_URL")
+SUPABASE_KEY = _get_secret("SUPABASE_KEY")           # anon/public key
+SUPABASE_SERVICE_KEY = _get_secret("SUPABASE_SERVICE_KEY")  # service role key
 
 # ─── Claude AI Settings ───────────────────────────────────────────────────────
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
+ANTHROPIC_API_KEY = _get_secret("ANTHROPIC_API_KEY")
 CLAUDE_MODEL = "claude-sonnet-4-20250514"
 
 # ─── ML Model Settings ───────────────────────────────────────────────────────
@@ -96,7 +108,7 @@ ML_FEATURES = [
 ]
 
 # ─── Logging ──────────────────────────────────────────────────────────────────
-LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+LOG_LEVEL = _get_secret("LOG_LEVEL", "INFO")
 LOG_FILE = "nifty50_trader.log"
 
 # ─── Market Hours (IST) ──────────────────────────────────────────────────────
